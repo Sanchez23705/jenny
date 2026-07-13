@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorpresa para Jenny</title>
+    
+    <!-- Fuentes premium de Google Fonts -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Pinyon+Script&display=swap');
+    </style>
+
+    <!-- Librería externa para el efecto de confeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #0B1021; 
+            background-image: radial-gradient(circle at 50% 0%, #1a2542 0%, #0B1021 70%);
+            font-family: 'Montserrat', sans-serif;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- CONTROL DE PANTALLAS --- */
+        .pantalla {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s;
+            z-index: 1;
+        }
+        .activa {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        /* --- PANTALLA 1: INTRODUCCIÓN --- */
+        .intro-box {
+            text-align: center;
+            padding: 0 20px;
+        }
+        .intro-box h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3em;
+            color: #d4af37; 
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .intro-box p {
+            font-size: 1.2em;
+            color: #a8b2d1;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+        .btn-gold {
+            background: transparent;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+        .btn-gold:hover {
+            background: #d4af37;
+            color: #0B1021;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* --- PANTALLA 2: EL SOBRE --- */
+        .sobre-wrapper {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .sobre-wrapper:hover {
+            transform: scale(1.02) translateY(-5px);
+        }
+        
+        .sobre-cuerpo {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 100%;
+            background: #c7a445; 
+            border-radius: 4px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            overflow: hidden;
+            z-index: 2;
+        }
+        .sobre-cuerpo::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            border-left: 150px solid #e0be63;
+            border-right: 150px solid #e0be63;
+            border-top: 100px solid transparent;
+            border-bottom: 100px solid #c7a445;
+            z-index: 2;
+        }
+        .solapa {
+            position: absolute;
+            top: 0; left: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #f2d47c; 
+            z-index: 4;
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+        }
+        
+        .sobre-wrapper.abierto .solapa {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        
+        .instruccion-sobre {
+            margin-top: 50px;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #a8b2d1;
+            font-size: 1.2em;
+            animation: respirar 2s infinite;
+        }
+        @keyframes respirar {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* --- PANTALLA 3: EL DIPLOMA PREMIUM --- */
+        .diploma-contenedor {
+            background: #FFFAF0; 
+            width: 90%;
+            max-width: 650px;
+            padding: 40px;
+            box-sizing: border-box;
+            border-radius: 2px;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 100px rgba(212, 175, 55, 0.1);
+            text-align: center;
+            color: #2c3e50;
+            
+            border: 1px solid #d4af37;
+            outline: 1px solid #d4af37;
+            outline-offset: -10px;
+            
+            transform: scale(0.9) translateY(30px);
+            opacity: 0;
+            transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .pantalla.activa .diploma-contenedor {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .diploma-header {
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #8c7322;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .diploma-nombre {
+            font-family: 'Pinyon Script', cursive; 
+            font-size: 5em;
+            color: #1a2542; 
+            margin: 10px 0;
+            line-height: 1;
+        }
+        .diploma-curso {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6em;
+            color: #d4af37;
+            font-weight: 700;
+            font-style: italic;
+            margin: 20px 0;
+        }
+        .diploma-texto {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1em;
+            line-height: 1.8;
+            color: #4a5568;
+            margin: 30px auto;
+            max-width: 85%;
+            font-weight: 300;
+        }
+        
+        .linea-divisora {
+            width: 50px;
+            height: 2px;
+            background: #d4af37;
+            margin: 0 auto;
+        }
+        .sello-premium {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px dashed #d4af37;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: #d4af37;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.6em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            background: #FFFAF0; /* Para que tape la línea del borde si se cruza */
+        }
+        .sello-premium span {
+            font-size: 3em;
+            margin-bottom: 5px;
+        }
+        .firma-area {
+            margin-top: 50px;
+            text-align: left;
+            padding-left: 20px;
+        }
+        .firma-linea {
+            width: 200px;
+            border-top: 1px solid #718096;
+            margin-bottom: 10px;
+        }
+        .firma-texto {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #2d3748;
+            font-size: 1.1em;
+        }
+
+        /* =========================================
+           ADAPTACIÓN PARA TELÉFONOS MÓVILES (NUEVO)
+           ========================================= */
+        @media (max-width: 600px) {
+            .intro-box h1 {
+                font-size: 2.2em;
+            }
+            .intro-box p {
+                font-size: 1em;
+            }
+            
+            /* Ajustes del sobre para que quepa en pantallas delgadas */
+            .sobre-wrapper {
+                width: 260px;
+                height: 175px;
+            }
+            .sobre-cuerpo::before {
+                border-left: 130px solid #e0be63;
+                border-right: 130px solid #e0be63;
+                border-top: 87.5px solid transparent;
+                border-bottom: 87.5px solid #c7a445;
+            }
+            .solapa {
+                border-left: 130px solid transparent;
+                border-right: 130px solid transparent;
+                border-top: 95px solid #f2d47c;
+            }
+
+            /* Ajustes del diploma */
+            .diploma-contenedor {
+                padding: 25px 15px; /* Menos margen interno */
+                width: 95%; /* Ocupa más ancho de la pantalla */
+                outline-offset: -6px; /* Borde más pegado */
+            }
+            .diploma-header {
+                font-size: 0.7em;
+                letter-spacing: 2px;
+                margin-bottom: 10px;
+            }
+            .diploma-nombre {
+                font-size: 3.5em; /* Letra más pequeña para que no se corte */
+            }
+            .diploma-curso {
+                font-size: 1.2em;
+                margin: 10px 0;
+            }
+            .diploma-texto {
+                font-size: 0.85em;
+                line-height: 1.5;
+                margin: 15px auto;
+                max-width: 95%;
+            }
+            .firma-area {
+                margin-top: 25px;
+                padding-left: 5px;
+            }
+            .firma-linea {
+                width: 130px; /* Línea de firma más corta */
+            }
+            .firma-texto {
+                font-size: 0.9em;
+            }
+            .sello-premium {
+                bottom: 15px; /* Más pegado a la esquina */
+                right: 15px;
+                width: 55px; /* Sello más pequeño */
+                height: 55px;
+                font-size: 0.45em;
+            }
+            .sello-premium span {
+                font-size: 2.2em;
+            }
+        }
+        /* Para pantallas muy, muy pequeñas (como un iPhone SE antiguo) */
+        @media (max-width: 350px) {
+            .diploma-nombre { font-size: 2.8em; }
+            .diploma-texto { font-size: 0.75em; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. PANTALLA DE INTRODUCCIÓN -->
+    <div class="pantalla activa" id="pantalla-1">
+        <div class="intro-box">
+            <h1>Para Jenny</h1>
+            <p>Hay momentos que merecen ser enmarcados.<br>Tengo algo especial para ti.</p>
+            <button class="btn-gold" onclick="irPantallaSobre()">Comenzar</button>
+        </div>
+    </div>
+
+    <!-- 2. PANTALLA DEL SOBRE -->
+    <div class="pantalla" id="pantalla-2">
+        <div class="sobre-wrapper" id="sobre-interactivo" onclick="abrirSorpresa()">
+            <div class="sobre-cuerpo"></div>
+            <div class="solapa"></div>
+        </div>
+        <div class="instruccion-sobre">Toca el sobre dorado para abrir</div>
+    </div>
+
+    <!-- 3. PANTALLA DEL DIPLOMA -->
+    <div class="pantalla" id="pantalla-3">
+        <div class="diploma-contenedor">
+            <div class="diploma-header">Certificado de Excelencia</div>
+            
+            <p style="font-family: 'Playfair Display', serif; color: #718096; font-style: italic; font-size: 0.9em; margin-bottom: 5px;">Se otorga el presente reconocimiento a</p>
+            
+            <div class="diploma-nombre">Jenny</div>
+            <div class="linea-divisora"></div>
+            
+            <div class="diploma-curso">Curso Básico de Acrilismo</div>
+            
+            <div class="diploma-texto">
+                Por tu dedicación, paciencia y el inmenso talento que demuestras en cada detalle. 
+                Este es solo el primer paso de un camino lleno de éxito y creatividad. 
+                Estoy infinitamente orgulloso de la mujer en la que te estás convirtiendo.
+            </div>
+
+            <div class="firma-area">
+                <div class="firma-linea"></div>
+                <div class="firma-texto">Con todo mi amor y orgullo,<br>Tu Novio</div>
+            </div>
+
+            <div class="sello-premium">
+                <span>💅</span>
+                Logro
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function irPantallaSobre() {
+            document.getElementById('pantalla-1').classList.remove('activa');
+            document.getElementById('pantalla-2').classList.add('activa');
+        }
+
+        let sobreAbierto = false;
+        
+        function abrirSorpresa() {
+            if (sobreAbierto) return;
+            sobreAbierto = true;
+
+            const sobre = document.getElementById('sobre-interactivo');
+            sobre.classList.add('abierto');
+
+            setTimeout(() => {
+                document.getElementById('pantalla-2').classList.remove('activa');
+                document.getElementById('pantalla-3').classList.add('activa');
+                
+                lanzarConfetiPremium();
+            }, 1000); 
+        }
+
+        function lanzarConfetiPremium() {
+            var duration = 4 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100, colors: ['#d4af37', '#e0be63', '#ffffff', '#FFFAF0'] };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+                var particleCount = 40 * (timeLeft / duration);
+                
+                confetti(Object.assign({}, defaults, { 
+                    particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                }));
+            }, 250);
+        }
+    </script>
+</body>
+</html>

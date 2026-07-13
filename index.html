@@ -20,7 +20,7 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background: #0B1021; /* Azul noche muy oscuro y elegante */
+            background: #0B1021; 
             background-image: radial-gradient(circle at 50% 0%, #1a2542 0%, #0B1021 70%);
             font-family: 'Montserrat', sans-serif;
             color: #fff;
@@ -58,7 +58,7 @@
         .intro-box h1 {
             font-family: 'Playfair Display', serif;
             font-size: 3em;
-            color: #d4af37; /* Dorado premium */
+            color: #d4af37; 
             margin-bottom: 10px;
             font-weight: 600;
             letter-spacing: 1px;
@@ -100,11 +100,10 @@
             transform: scale(1.02) translateY(-5px);
         }
         
-        /* Construcción del sobre con CSS puro */
         .sobre-cuerpo {
             position: absolute;
             bottom: 0; left: 0; width: 100%; height: 100%;
-            background: #c7a445; /* Dorado base */
+            background: #c7a445; 
             border-radius: 4px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             overflow: hidden;
@@ -123,14 +122,13 @@
             top: 0; left: 0;
             border-left: 150px solid transparent;
             border-right: 150px solid transparent;
-            border-top: 110px solid #f2d47c; /* Dorado claro */
+            border-top: 110px solid #f2d47c; 
             z-index: 4;
             transform-origin: top;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
         }
         
-        /* Animación de apertura */
         .sobre-wrapper.abierto .solapa {
             transform: rotateX(180deg);
             z-index: 1;
@@ -151,7 +149,7 @@
 
         /* --- PANTALLA 3: EL DIPLOMA PREMIUM --- */
         .diploma-contenedor {
-            background: #FFFAF0; /* Color crema/pergamino muy sutil */
+            background: #FFFAF0; 
             width: 90%;
             max-width: 650px;
             padding: 40px;
@@ -162,7 +160,6 @@
             text-align: center;
             color: #2c3e50;
             
-            /* Doble borde elegante */
             border: 1px solid #d4af37;
             outline: 1px solid #d4af37;
             outline-offset: -10px;
@@ -176,7 +173,6 @@
             opacity: 1;
         }
 
-        /* Tipografía del diploma */
         .diploma-header {
             font-family: 'Montserrat', sans-serif;
             text-transform: uppercase;
@@ -187,9 +183,9 @@
             margin-bottom: 20px;
         }
         .diploma-nombre {
-            font-family: 'Pinyon Script', cursive; /* Fuente hiper elegante para el nombre */
+            font-family: 'Pinyon Script', cursive; 
             font-size: 5em;
-            color: #1a2542; /* Azul marino oscuro */
+            color: #1a2542; 
             margin: 10px 0;
             line-height: 1;
         }
@@ -211,7 +207,6 @@
             font-weight: 300;
         }
         
-        /* Detalles decorativos */
         .linea-divisora {
             width: 50px;
             height: 2px;
@@ -236,6 +231,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
+            background: #FFFAF0; /* Para que tape la línea del borde si se cruza */
         }
         .sello-premium span {
             font-size: 3em;
@@ -258,6 +254,84 @@
             font-size: 1.1em;
         }
 
+        /* =========================================
+           ADAPTACIÓN PARA TELÉFONOS MÓVILES (NUEVO)
+           ========================================= */
+        @media (max-width: 600px) {
+            .intro-box h1 {
+                font-size: 2.2em;
+            }
+            .intro-box p {
+                font-size: 1em;
+            }
+            
+            /* Ajustes del sobre para que quepa en pantallas delgadas */
+            .sobre-wrapper {
+                width: 260px;
+                height: 175px;
+            }
+            .sobre-cuerpo::before {
+                border-left: 130px solid #e0be63;
+                border-right: 130px solid #e0be63;
+                border-top: 87.5px solid transparent;
+                border-bottom: 87.5px solid #c7a445;
+            }
+            .solapa {
+                border-left: 130px solid transparent;
+                border-right: 130px solid transparent;
+                border-top: 95px solid #f2d47c;
+            }
+
+            /* Ajustes del diploma */
+            .diploma-contenedor {
+                padding: 25px 15px; /* Menos margen interno */
+                width: 95%; /* Ocupa más ancho de la pantalla */
+                outline-offset: -6px; /* Borde más pegado */
+            }
+            .diploma-header {
+                font-size: 0.7em;
+                letter-spacing: 2px;
+                margin-bottom: 10px;
+            }
+            .diploma-nombre {
+                font-size: 3.5em; /* Letra más pequeña para que no se corte */
+            }
+            .diploma-curso {
+                font-size: 1.2em;
+                margin: 10px 0;
+            }
+            .diploma-texto {
+                font-size: 0.85em;
+                line-height: 1.5;
+                margin: 15px auto;
+                max-width: 95%;
+            }
+            .firma-area {
+                margin-top: 25px;
+                padding-left: 5px;
+            }
+            .firma-linea {
+                width: 130px; /* Línea de firma más corta */
+            }
+            .firma-texto {
+                font-size: 0.9em;
+            }
+            .sello-premium {
+                bottom: 15px; /* Más pegado a la esquina */
+                right: 15px;
+                width: 55px; /* Sello más pequeño */
+                height: 55px;
+                font-size: 0.45em;
+            }
+            .sello-premium span {
+                font-size: 2.2em;
+            }
+        }
+        /* Para pantallas muy, muy pequeñas (como un iPhone SE antiguo) */
+        @media (max-width: 350px) {
+            .diploma-nombre { font-size: 2.8em; }
+            .diploma-texto { font-size: 0.75em; }
+        }
     </style>
 </head>
 <body>
@@ -285,7 +359,7 @@
         <div class="diploma-contenedor">
             <div class="diploma-header">Certificado de Excelencia</div>
             
-            <p style="font-family: 'Playfair Display', serif; color: #718096; font-style: italic;">Se otorga el presente reconocimiento a</p>
+            <p style="font-family: 'Playfair Display', serif; color: #718096; font-style: italic; font-size: 0.9em; margin-bottom: 5px;">Se otorga el presente reconocimiento a</p>
             
             <div class="diploma-nombre">Jenny</div>
             <div class="linea-divisora"></div>
@@ -311,39 +385,31 @@
     </div>
 
     <script>
-        // Transición de la Intro al Sobre
         function irPantallaSobre() {
             document.getElementById('pantalla-1').classList.remove('activa');
             document.getElementById('pantalla-2').classList.add('activa');
         }
 
-        // Lógica para abrir el sobre y mostrar el diploma SIN cortes
         let sobreAbierto = false;
         
         function abrirSorpresa() {
             if (sobreAbierto) return;
             sobreAbierto = true;
 
-            // 1. Animamos el sobre para que se abra
             const sobre = document.getElementById('sobre-interactivo');
             sobre.classList.add('abierto');
 
-            // 2. Esperamos 1 segundo a que termine de abrirse, 
-            // ocultamos la pantalla del sobre y mostramos el diploma de golpe.
             setTimeout(() => {
                 document.getElementById('pantalla-2').classList.remove('activa');
                 document.getElementById('pantalla-3').classList.add('activa');
                 
-                // Disparamos el confeti elegante (dorado y blanco)
                 lanzarConfetiPremium();
             }, 1000); 
         }
 
-        // Configuración de confeti con colores premium
         function lanzarConfetiPremium() {
             var duration = 4 * 1000;
             var animationEnd = Date.now() + duration;
-            // Colores: Dorado oscuro, dorado claro, crema, blanco
             var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100, colors: ['#d4af37', '#e0be63', '#ffffff', '#FFFAF0'] };
 
             function randomInRange(min, max) {
